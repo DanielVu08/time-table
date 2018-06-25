@@ -1,4 +1,4 @@
-node('iOS Node') {
+node('master') {
 
     stage('Checkout/Build/Test') {
 
@@ -10,7 +10,7 @@ node('iOS Node') {
             extensions: [], submoduleCfg: [],
             userRemoteConfigs: [[
                 name: 'github',
-                url: 'https://github.com/mmorejon/time-table.git'
+                url: 'https://github.com/DanielVu08/time-table.git'
             ]]
         ])
 
@@ -21,28 +21,28 @@ node('iOS Node') {
         step([$class: 'JUnitResultArchiver', allowEmptyResults: true, testResults: 'build/reports/junit.xml'])
     }
 
-    stage('Analytics') {
+    //stage('Analytics') {
         
-        parallel Coverage: {
+        //parallel Coverage: {
             // Generate Code Coverage report
-            sh '/usr/local/bin/slather coverage --jenkins --html --scheme TimeTable TimeTable.xcodeproj/'
+            //sh '/usr/local/bin/slather coverage --jenkins --html --scheme TimeTable TimeTable.xcodeproj/'
     
             // Publish coverage results
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'html', reportFiles: 'index.html', reportName: 'Coverage Report'])
+            //publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'html', reportFiles: 'index.html', reportName: 'Coverage Report'])
         
             
-        }, Checkstyle: {
+        //}, Checkstyle: {
 
             // Generate Checkstyle report
-            sh '/usr/local/bin/swiftlint lint --reporter checkstyle > checkstyle.xml || true'
+            //sh '/usr/local/bin/swiftlint lint --reporter checkstyle > checkstyle.xml || true'
     
             // Publish checkstyle result
-            step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'checkstyle.xml', unHealthy: ''])
-        }, failFast: true|false   
-    }
+            //step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'checkstyle.xml', unHealthy: ''])
+        //}, failFast: true|false   
+    //}
 
-    stage ('Notify') {
+    //stage ('Notify') {
         // Send slack notification
-        slackSend channel: '#my-team', message: 'Time Table - Successfully', teamDomain: 'my-team', token: 'my-token'
-    }
+        //slackSend channel: '#my-team', message: 'Time Table - Successfully', teamDomain: 'my-team', token: 'my-token'
+    //}
 }
